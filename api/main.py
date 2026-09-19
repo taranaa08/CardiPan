@@ -7,6 +7,7 @@ Every day-scoped call takes the client's local date (YYYY-MM-DD), so the running
 total "resets at midnight" wherever the patient is, with no job on the server.
 """
 
+from contextlib import asynccontextmanager
 from datetime import date
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
@@ -16,7 +17,13 @@ from api import queries as q
 
 CATEGORY_ORDER = ["Produce", "Protein", "Grains", "Legumes", "Sauces", "Seasonings", "Oils", "Pantry"]
 
-app = FastAPI(title="Heart-Healthy Pantry Meal Finder")
+@asynccontextmanager
+async def lifespan(_app):
+    q.migrate()
+    yield
+
+
+app = FastAPI(title="Heart-Healthy Pantry Meal Finder", lifespan=lifespan)
 api = APIRouter(prefix="/api")
 
 
@@ -139,6 +146,21 @@ def get_recipe(recipe_id: str, day: date, con=Depends(db)):
         raise HTTPException(404, f"Unknown recipe: {recipe_id}")
     t = q.today(con, day.isoformat())
     return {**r, "fit": q.budget_fit(con, r, t["remaining_mg"]), "today": t}
+
+
+@api.put("/recipes/{recipe_id}/removed")
+def remove_recipe(recipe_id: str, con=Depends(db)):
+    """Delete a recipe from the list and deck. Soft: the data stays and it can be restored."""
+    if not q.recipe_exists(con, recipe_id):
+        raise HTTPException(404, f"Unknown recipe: {recipe_id}")
+    q.set_removed(con, recipe_id, True)
+    return {"recipe_id": recipe_id, "removed": True}
+
+
+@api.delete("/recipes/{recipe_id}/removed")
+def restore_recipe(recipe_id: str, con=Depends(db)):
+    q.set_removed(con, recipe_id, False)
+    return {"recipe_id": recipe_id, "removed": False}
 
 
 @api.post("/log")

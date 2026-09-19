@@ -52,7 +52,10 @@ export type Fit = {
   swaps: Swap[]
 }
 
-export type RecipeSummary = Omit<Recipe, 'missing' | 'swaps' | 'sodium_mg_with_swaps'> & { fit: Fit }
+export type RecipeSummary = Omit<Recipe, 'missing' | 'swaps' | 'sodium_mg_with_swaps'> & {
+  fit: Fit
+  removed: boolean // deleted by the user; hidden from the list and deck until restored
+}
 
 export type RecipeIngredient = {
   id: string
@@ -63,7 +66,7 @@ export type RecipeIngredient = {
   in_pantry: boolean
 }
 
-export type RecipeDetail = RecipeSummary & {
+export type RecipeDetail = Omit<RecipeSummary, 'removed'> & {
   steps: string[]
   ingredients: RecipeIngredient[]
   available_swaps: Swap[]
@@ -127,6 +130,8 @@ export const api = {
     request<LogResult>('/log', 'POST', { recipe_id: recipeId, day, swaps }),
   recipes: (day: string) => request<{ today: Today; recipes: RecipeSummary[] }>(`/recipes?day=${day}`),
   recipe: (id: string, day: string) => request<RecipeDetail>(`/recipes/${encodeURIComponent(id)}?day=${day}`),
+  removeRecipe: (id: string) => request(`/recipes/${encodeURIComponent(id)}/removed`, 'PUT'),
+  restoreRecipe: (id: string) => request(`/recipes/${encodeURIComponent(id)}/removed`, 'DELETE'),
   undo: (entryId: number) => request(`/log/${entryId}`, 'DELETE'),
   demoReset: (day: string) => request<Today>('/demo/reset', 'POST', { day }),
 }

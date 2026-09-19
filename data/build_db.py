@@ -57,6 +57,9 @@ CREATE TABLE recipe_swaps (                   -- one row per substitution that a
     mg_saved_per_serving INTEGER NOT NULL,
     PRIMARY KEY (recipe_id, from_id)
 );
+CREATE TABLE removed_recipes (                -- recipes the user deleted; kept in recipes.json, restorable
+    recipe_id TEXT PRIMARY KEY REFERENCES recipes(id)
+);
 CREATE TABLE pantry (
     ingredient_id TEXT PRIMARY KEY REFERENCES ingredients(id)
 );

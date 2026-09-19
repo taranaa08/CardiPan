@@ -193,3 +193,17 @@ def test_recipe_detail(client):
     assert abs(sum(i["sodium_mg_per_serving"] for i in r["ingredients"]) - r["sodium_mg_per_serving"]) < 1
     assert r["fit"]["status"] == "fits"
     assert client.get("/api/recipes/unicorn", params={"day": DAY}).status_code == 404
+
+
+def test_deleted_recipe_leaves_deck_and_can_be_restored(client):
+    setup(client, target=400, pantry=BOWL_PANTRY)
+    assert "tomato_egg" in deck_ids(client) and "soy_ginger_bowl" in swap_cards(client)
+    assert client.put("/api/recipes/tomato_egg/removed").status_code == 200
+    assert client.put("/api/recipes/soy_ginger_bowl/removed").status_code == 200
+    assert "tomato_egg" not in deck_ids(client)
+    assert "soy_ginger_bowl" not in swap_cards(client)
+    listed = {r["id"]: r for r in client.get("/api/recipes", params={"day": DAY}).json()["recipes"]}
+    assert len(listed) == 27 and listed["tomato_egg"]["removed"] and not listed["masoor_dal"]["removed"]
+    client.delete("/api/recipes/tomato_egg/removed")
+    assert "tomato_egg" in deck_ids(client)
+    assert client.put("/api/recipes/unicorn/removed").status_code == 404

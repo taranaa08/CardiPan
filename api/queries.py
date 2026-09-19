@@ -25,6 +25,18 @@ def connect():
     return con
 
 
+def migrate():
+    """Add runtime tables that databases built before them lack, so nobody has to rebuild (and lose their log)."""
+    con = connect()
+    try:
+        con.execute(
+            "CREATE TABLE IF NOT EXISTS removed_recipes (recipe_id TEXT PRIMARY KEY REFERENCES recipes(id))"
+        )
+        con.commit()
+    finally:
+        con.close()
+
+
 def get_target(con):
     row = con.execute("SELECT value FROM settings WHERE key = 'sodium_target_mg'").fetchone()
     return int(row["value"]) if row else None
@@ -137,6 +149,7 @@ def deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
         JOIN recipe_ingredients ri ON ri.recipe_id = r.id
         LEFT JOIN pantry p ON p.ingredient_id = ri.ingredient_id
         WHERE r.sodium_mg_per_serving <= :remaining
+          AND r.id NOT IN (SELECT recipe_id FROM removed_recipes)
         GROUP BY r.id
         HAVING r.ingredient_count - have <= :max_missing
         ORDER BY 1.0 * have / r.ingredient_count DESC, r.sodium_mg_per_serving ASC, r.id
@@ -170,6 +183,7 @@ def swap_deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
                sodium_mg_per_serving, sodium_mg_min_per_serving
         FROM recipes
         WHERE sodium_mg_per_serving > ? AND sodium_mg_min_per_serving < sodium_mg_per_serving
+          AND id NOT IN (SELECT recipe_id FROM removed_recipes)
         """,
         (remaining,),
     ):
@@ -193,14 +207,15 @@ def swap_deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
 
 
 def recipe_list(con):
-    """Every recipe, lowest sodium first, with how many of its ingredients are in the pantry."""
+    """Every recipe (deleted ones flagged), lowest sodium first, with how many ingredients are in the pantry."""
     return [
-        dict(r)
+        {**dict(r), "removed": bool(r["removed"])}
         for r in con.execute(
             """
             SELECT r.id, r.name, r.cuisine, r.emoji, r.blurb, r.servings, r.minutes,
                    r.ingredient_count, r.sodium_mg_per_serving, r.sodium_mg_min_per_serving,
-                   COUNT(p.ingredient_id) AS have
+                   COUNT(p.ingredient_id) AS have,
+                   r.id IN (SELECT recipe_id FROM removed_recipes) AS removed
             FROM recipes r
             JOIN recipe_ingredients ri ON ri.recipe_id = r.id
             LEFT JOIN pantry p ON p.ingredient_id = ri.ingredient_id
@@ -248,6 +263,13 @@ def budget_fit(con, recipe, remaining):
     if swaps is not None:
         return {"status": "swap", "sodium_mg": mg, "swaps": swaps}
     return {"status": "over", "sodium_mg": per, "swaps": []}
+
+
+def set_removed(con, recipe_id, removed):
+    if removed:
+        con.execute("INSERT OR IGNORE INTO removed_recipes VALUES (?)", (recipe_id,))
+    else:
+        con.execute("DELETE FROM removed_recipes WHERE recipe_id = ?", (recipe_id,))
 
 
 def log_recipe(con, day, recipe_id, swaps=()):
