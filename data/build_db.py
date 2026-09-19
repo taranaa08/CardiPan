@@ -42,6 +42,7 @@ CREATE TABLE recipe_ingredients (
     ingredient_id TEXT NOT NULL REFERENCES ingredients(id),
     grams REAL NOT NULL,
     display TEXT NOT NULL,
+    sodium_mg_per_serving REAL NOT NULL,      -- this ingredient's share, for "where the sodium comes from"
     PRIMARY KEY (recipe_id, ingredient_id)
 );
 CREATE TABLE substitutions (
@@ -149,8 +150,11 @@ def build(db_path=DB_PATH, quiet=False):
             ),
         )
         con.executemany(
-            "INSERT INTO recipe_ingredients VALUES (?,?,?,?)",
-            [(r["id"], i, g, d) for i, g, d in r["ingredients"]],
+            "INSERT INTO recipe_ingredients VALUES (?,?,?,?,?)",
+            [
+                (r["id"], i, g, d, round(sodium(ingredients, [[i, g, d]]) / r["servings"], 1))
+                for i, g, d in r["ingredients"]
+            ],
         )
         for line in r["ingredients"]:
             if line[0] in subs:

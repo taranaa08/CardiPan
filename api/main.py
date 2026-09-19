@@ -123,6 +123,24 @@ def get_deck(day: date, max_missing: int = Query(q.DEFAULT_MAX_MISSING, ge=0), c
     }
 
 
+@api.get("/recipes")
+def list_recipes(day: date, con=Depends(db)):
+    t = q.today(con, day.isoformat())
+    return {
+        "today": t,
+        "recipes": [{**r, "fit": q.budget_fit(con, r, t["remaining_mg"])} for r in q.recipe_list(con)],
+    }
+
+
+@api.get("/recipes/{recipe_id}")
+def get_recipe(recipe_id: str, day: date, con=Depends(db)):
+    r = q.recipe_detail(con, recipe_id)
+    if r is None:
+        raise HTTPException(404, f"Unknown recipe: {recipe_id}")
+    t = q.today(con, day.isoformat())
+    return {**r, "fit": q.budget_fit(con, r, t["remaining_mg"]), "today": t}
+
+
 @api.post("/log")
 def log_recipe(body: LogRequest, con=Depends(db)):
     require_target(con)

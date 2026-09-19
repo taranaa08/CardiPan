@@ -170,3 +170,26 @@ def test_log_rejects_swap_that_does_not_apply(client):
     setup(client)
     res = client.post("/api/log", json={"recipe_id": "tomato_egg", "day": DAY, "swaps": ["fish_sauce"]})
     assert res.status_code == 400
+
+
+def test_recipe_list_statuses_match_the_deck(client):
+    setup(client, target=400, pantry=BOWL_PANTRY)
+    recipes = client.get("/api/recipes", params={"day": DAY}).json()["recipes"]
+    assert len(recipes) == 27
+    by_status = {}
+    for r in recipes:
+        by_status.setdefault(r["fit"]["status"], set()).add(r["id"])
+    assert "soy_ginger_bowl" in by_status["swap"]
+    assert "chicken_pho" in by_status["over"]
+    assert by_status["fits"] >= set(deck_ids(client))
+
+
+def test_recipe_detail(client):
+    setup(client)
+    r = client.get("/api/recipes/chicken_adobo", params={"day": DAY}).json()
+    assert r["steps"] and r["ingredients"][0]["id"] == "chicken_thigh"  # recipe order, not sodium order
+    assert r["have"] == sum(i["in_pantry"] for i in r["ingredients"])
+    # Per-ingredient shares add up to the per-serving total, give or take rounding.
+    assert abs(sum(i["sodium_mg_per_serving"] for i in r["ingredients"]) - r["sodium_mg_per_serving"]) < 1
+    assert r["fit"]["status"] == "fits"
+    assert client.get("/api/recipes/unicorn", params={"day": DAY}).status_code == 404

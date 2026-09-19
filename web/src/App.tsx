@@ -1,14 +1,16 @@
 import { AnimatePresence } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
-import { api, localDay, type Catalog, type Recipe, type Today } from './api'
+import { api, localDay, type Catalog, type Recipe, type RecipeDetail as Detail, type Swap, type Today } from './api'
 import { BudgetHeader } from './components/BudgetHeader'
 import { SelectionSheet, type Picked } from './components/SelectionSheet'
 import { DeckScreen, type Direction } from './screens/DeckScreen'
 import { PantryScreen } from './screens/PantryScreen'
+import { RecipeDetail } from './screens/RecipeDetail'
+import { RecipesScreen } from './screens/RecipesScreen'
 import { TargetScreen } from './screens/TargetScreen'
 import './App.css'
 
-type Screen = 'loading' | 'target' | 'pantry' | 'deck'
+type Screen = 'loading' | 'target' | 'pantry' | 'deck' | 'recipes'
 
 // Cards swiped away today. Client-only: skips are a browsing choice, picks are also logged on the server.
 type Hidden = { day: string; skipped: string[]; picked: string[] }
@@ -32,8 +34,9 @@ export default function App() {
   const [hidden, setHidden] = useState<Hidden>(() => emptyHidden(localDay()))
   const [picked, setPicked] = useState<Picked | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [recipeId, setRecipeId] = useState<string | null>(null) // recipe detail open over the current tab
 
-  const fail = (e: unknown) => setError(message(e))
+  const fail = useCallback((e: unknown) => setError(message(e)), [])
 
   const refreshDeck = useCallback(async () => {
     const day = localDay()
@@ -85,6 +88,17 @@ export default function App() {
     setPantry(new Set(await api.pantry()))
   }
 
+  function openRecipe(id: string) {
+    setPicked(null)
+    setRecipeId(id)
+    window.scrollTo(0, 0)
+  }
+
+  function goTo(next: Screen) {
+    setRecipeId(null)
+    setScreen(next)
+  }
+
   function togglePantry(id: string) {
     const had = pantry.has(id)
     setPantry((prev) => {
@@ -105,14 +119,16 @@ export default function App() {
 
   const unpick = (id: string) => setHidden((h) => ({ ...h, picked: h.picked.filter((x) => x !== id) }))
 
-  async function decide(recipe: Recipe, dir: Direction) {
-    if (dir === -1) {
-      setHidden((h) => ({ ...h, skipped: [...h.skipped, recipe.id] }))
-      return
-    }
+  function decide(recipe: Recipe, dir: Direction) {
+    if (dir === -1) setHidden((h) => ({ ...h, skipped: [...h.skipped, recipe.id] }))
+    else pick(recipe, recipe.swaps)
+  }
+
+  // Log one serving (from a swipe or the recipe page) and keep the card out of today's deck.
+  async function pick(recipe: Picked['recipe'], swaps: Swap[]) {
     setHidden((h) => ({ ...h, picked: [...h.picked, recipe.id] }))
     try {
-      const res = await api.log(recipe.id, localDay(), recipe.swaps.map((s) => s.from_id))
+      const res = await api.log(recipe.id, localDay(), swaps.map((s) => s.from_id))
       setToday(res.today)
       setPicked({
         recipe,
@@ -148,6 +164,7 @@ export default function App() {
       setHidden(emptyHidden(localDay()))
       setPicked(null)
       setEditingTarget(false)
+      setRecipeId(null)
       if (screen === 'deck') refreshDeck()
       else setScreen('deck')
     } catch (e) {
@@ -162,7 +179,8 @@ export default function App() {
   const visible = fitting.filter((r) => !skippedIds.has(r.id))
 
   const showTarget = screen === 'target' || editingTarget
-  const showChrome = !showTarget && (screen === 'pantry' || screen === 'deck') && today?.target_mg != null
+  const showChrome = !showTarget && screen !== 'loading' && today?.target_mg != null
+  const showDetail = !showTarget && recipeId !== null
 
   return (
     <div className="app">
@@ -179,10 +197,13 @@ export default function App() {
         <>
           <BudgetHeader today={today} onEditTarget={() => setEditingTarget(true)} onRemoveEntry={removeEntry} />
           <nav className="tabs" aria-label="Sections">
-            <button type="button" aria-current={screen === 'deck'} onClick={() => setScreen('deck')}>
+            <button type="button" aria-current={screen === 'deck'} onClick={() => goTo('deck')}>
               Meals
             </button>
-            <button type="button" aria-current={screen === 'pantry'} onClick={() => setScreen('pantry')}>
+            <button type="button" aria-current={screen === 'recipes'} onClick={() => goTo('recipes')}>
+              Recipes
+            </button>
+            <button type="button" aria-current={screen === 'pantry'} onClick={() => goTo('pantry')}>
               Pantry <span className="tab-count">{pantry.size}</span>
             </button>
           </nav>
@@ -198,7 +219,19 @@ export default function App() {
             onCancel={editingTarget ? () => setEditingTarget(false) : undefined}
           />
         )}
-        {!showTarget && screen === 'pantry' && catalog && (
+        {showDetail && (
+          <RecipeDetail
+            recipeId={recipeId}
+            consumedMg={today?.consumed_mg ?? 0}
+            onBack={() => setRecipeId(null)}
+            onAdd={(r: Detail) => pick(r, r.fit.swaps)}
+            onError={fail}
+          />
+        )}
+        {!showTarget && !showDetail && screen === 'recipes' && (
+          <RecipesScreen consumedMg={today?.consumed_mg ?? 0} onOpen={openRecipe} onError={fail} />
+        )}
+        {!showTarget && !showDetail && screen === 'pantry' && catalog && (
           <PantryScreen
             catalog={catalog}
             pantry={pantry}
@@ -208,7 +241,7 @@ export default function App() {
             onDone={() => setScreen('deck')}
           />
         )}
-        {!showTarget && screen === 'deck' && (
+        {!showTarget && !showDetail && screen === 'deck' && (
           <DeckScreen
             recipes={visible}
             fittingCount={fitting.length}
@@ -244,6 +277,7 @@ export default function App() {
             picked={picked}
             onUndo={() => removeEntry(picked.entryId, picked.recipe.id)}
             onClose={() => setPicked(null)}
+            onViewRecipe={recipeId === picked.recipe.id ? undefined : () => openRecipe(picked.recipe.id)}
           />
         )}
       </AnimatePresence>

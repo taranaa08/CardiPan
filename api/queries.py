@@ -1,5 +1,6 @@
 """SQL for the API. Sodium values are read from the precomputed tables, never recalculated here."""
 
+import json
 import os
 import sqlite3
 from pathlib import Path
@@ -189,6 +190,64 @@ def swap_deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
         })
     out.sort(key=lambda r: (-r["have"] / r["ingredient_count"], r["sodium_mg_with_swaps"], r["id"]))
     return out
+
+
+def recipe_list(con):
+    """Every recipe, lowest sodium first, with how many of its ingredients are in the pantry."""
+    return [
+        dict(r)
+        for r in con.execute(
+            """
+            SELECT r.id, r.name, r.cuisine, r.emoji, r.blurb, r.servings, r.minutes,
+                   r.ingredient_count, r.sodium_mg_per_serving, r.sodium_mg_min_per_serving,
+                   COUNT(p.ingredient_id) AS have
+            FROM recipes r
+            JOIN recipe_ingredients ri ON ri.recipe_id = r.id
+            LEFT JOIN pantry p ON p.ingredient_id = ri.ingredient_id
+            GROUP BY r.id
+            ORDER BY r.sodium_mg_per_serving, r.name
+            """
+        )
+    ]
+
+
+def recipe_detail(con, recipe_id):
+    r = con.execute("SELECT * FROM recipes WHERE id = ?", (recipe_id,)).fetchone()
+    if r is None:
+        return None
+    pantry_ids = set(pantry(con))
+    ingredients = [
+        {**dict(i), "in_pantry": i["id"] in pantry_ids}
+        for i in con.execute(
+            """
+            SELECT i.id, i.name, i.emoji, ri.display, ri.sodium_mg_per_serving
+            FROM recipe_ingredients ri JOIN ingredients i ON i.id = ri.ingredient_id
+            WHERE ri.recipe_id = ?
+            ORDER BY ri.rowid
+            """,
+            (recipe_id,),
+        )
+    ]
+    return {
+        **dict(r),
+        "steps": json.loads(r["steps"]),
+        "ingredients": ingredients,
+        "have": sum(i["in_pantry"] for i in ingredients),
+        "available_swaps": recipe_swaps(con, recipe_id),
+    }
+
+
+def budget_fit(con, recipe, remaining):
+    """How one serving fits what's left today: as written, with swaps (fewest needed), or not at all."""
+    per = recipe["sodium_mg_per_serving"]
+    if remaining is None:
+        return {"status": None, "sodium_mg": per, "swaps": []}
+    if per <= remaining:
+        return {"status": "fits", "sodium_mg": per, "swaps": []}
+    swaps, mg = choose_swaps(per, recipe_swaps(con, recipe["id"]), remaining)
+    if swaps is not None:
+        return {"status": "swap", "sodium_mg": mg, "swaps": swaps}
+    return {"status": "over", "sodium_mg": per, "swaps": []}
 
 
 def log_recipe(con, day, recipe_id, swaps=()):

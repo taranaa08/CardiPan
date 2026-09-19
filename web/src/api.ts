@@ -46,6 +46,30 @@ export type Recipe = {
 /** Sodium per serving as the card will be logged: with its swaps applied, if it has any. */
 export const cardSodium = (r: Recipe) => r.sodium_mg_with_swaps ?? r.sodium_mg_per_serving
 
+export type Fit = {
+  status: 'fits' | 'swap' | 'over' | null // null until a target is set
+  sodium_mg: number // per serving, with `swaps` applied
+  swaps: Swap[]
+}
+
+export type RecipeSummary = Omit<Recipe, 'missing' | 'swaps' | 'sodium_mg_with_swaps'> & { fit: Fit }
+
+export type RecipeIngredient = {
+  id: string
+  name: string
+  emoji: string
+  display: string
+  sodium_mg_per_serving: number
+  in_pantry: boolean
+}
+
+export type RecipeDetail = RecipeSummary & {
+  steps: string[]
+  ingredients: RecipeIngredient[]
+  available_swaps: Swap[]
+  today: Today
+}
+
 export type LogEntry = { id: number; recipe_id: string | null; label: string; sodium_mg: number; logged_at: string }
 
 export type Today = {
@@ -101,6 +125,8 @@ export const api = {
     request<{ today: Today; recipes: Recipe[]; swap_recipes: Recipe[] }>(`/deck?day=${day}`),
   log: (recipeId: string, day: string, swaps: string[]) =>
     request<LogResult>('/log', 'POST', { recipe_id: recipeId, day, swaps }),
+  recipes: (day: string) => request<{ today: Today; recipes: RecipeSummary[] }>(`/recipes?day=${day}`),
+  recipe: (id: string, day: string) => request<RecipeDetail>(`/recipes/${encodeURIComponent(id)}?day=${day}`),
   undo: (entryId: number) => request(`/log/${entryId}`, 'DELETE'),
   demoReset: (day: string) => request<Today>('/demo/reset', 'POST', { day }),
 }

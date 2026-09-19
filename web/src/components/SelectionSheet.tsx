@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { fmt, type MissingIngredient, type Recipe, type Swap, type Today } from '../api'
 
 export type Picked = {
-  recipe: Recipe
+  recipe: Pick<Recipe, 'id' | 'name' | 'emoji'>
   entryId: number
   sodiumMg: number
   swaps: Swap[]
@@ -15,9 +15,10 @@ type Props = {
   picked: Picked
   onUndo: () => void
   onClose: () => void
+  onViewRecipe?: () => void // omitted when the recipe is already on screen
 }
 
-export function SelectionSheet({ picked, onUndo, onClose }: Props) {
+export function SelectionSheet({ picked, onUndo, onClose, onViewRecipe }: Props) {
   const { recipe, sodiumMg, swaps, missing, today } = picked
   const remaining = today.remaining_mg ?? 0
 
@@ -91,6 +92,12 @@ export function SelectionSheet({ picked, onUndo, onClose }: Props) {
               ))}
             </ul>
           </>
+        )}
+
+        {onViewRecipe && (
+          <button type="button" className="link" onClick={onViewRecipe}>
+            See ingredients and steps →
+          </button>
         )}
 
         <div className="actions">

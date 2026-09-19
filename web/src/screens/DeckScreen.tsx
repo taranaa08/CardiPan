@@ -1,16 +1,11 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform, type PanInfo } from 'framer-motion'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { cardSodium, fmt, type Recipe } from '../api'
+import { hue } from '../hue'
 
 export type Direction = 1 | -1 // 1 = pick (right), -1 = skip (left)
 
 const SWIPE_THRESHOLD = 120
-
-function hue(id: string) {
-  let h = 0
-  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 360
-  return h
-}
 
 type CardProps = {
   recipe: Recipe
