@@ -53,6 +53,10 @@ CREATE TABLE substitutions (
 CREATE TABLE pantry (
     ingredient_id TEXT PRIMARY KEY REFERENCES ingredients(id)
 );
+CREATE TABLE settings (
+    key TEXT PRIMARY KEY,                     -- e.g. sodium_target_mg
+    value TEXT NOT NULL
+);
 CREATE TABLE daily_log (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     day TEXT NOT NULL,                        -- YYYY-MM-DD, local
