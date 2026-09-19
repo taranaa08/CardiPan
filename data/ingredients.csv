@@ -1,0 +1,68 @@
+id,name,category,emoji,sodium_mg_per_100g,note
+soy_sauce,Soy sauce,Sauces,🫙,5493,USDA FDC soy sauce (shoyu); ~880 mg/tbsp
+soy_sauce_low,Low-sodium soy sauce,Sauces,🫙,3333,USDA FDC reduced-sodium soy sauce; ~530 mg/tbsp
+fish_sauce,Fish sauce,Sauces,🐟,7851,USDA FDC fish sauce; ~1400 mg/tbsp
+oyster_sauce,Oyster sauce,Sauces,🦪,2733,USDA FDC oyster sauce
+miso,Miso,Sauces,🥣,3728,USDA FDC miso
+gochujang,Gochujang,Sauces,🌶️,2100,APPROX: brand labels vary 1800-2800; verify against label
+doubanjiang,Chili bean paste (doubanjiang),Sauces,🌶️,6000,APPROX: brand labels vary widely; verify against label
+rice_vinegar,Rice vinegar (unseasoned),Sauces,🍶,2,Unseasoned only; seasoned rice vinegar contains salt
+white_vinegar,White vinegar,Sauces,🍶,2,USDA FDC distilled vinegar
+salt,Table salt,Seasonings,🧂,38758,USDA FDC table salt
+msg,MSG,Seasonings,✨,12280,~1/3 the sodium of table salt by weight
+white_pepper,White pepper,Seasonings,⚪,5,USDA FDC white pepper
+black_pepper,Black pepper,Seasonings,⚫,20,USDA FDC black pepper
+chili_flakes,Chili flakes / gochugaru,Seasonings,🌶️,30,USDA FDC crushed red pepper
+cumin,Ground cumin,Seasonings,🟤,168,USDA FDC cumin
+coriander_ground,Ground coriander,Seasonings,🟤,35,USDA FDC coriander seed
+turmeric,Turmeric,Seasonings,🟡,27,USDA FDC turmeric
+curry_powder,Curry powder,Seasonings,🟡,52,USDA FDC curry powder
+sugar,Sugar,Seasonings,🍚,1,USDA FDC granulated sugar
+honey,Honey,Seasonings,🍯,4,USDA FDC honey
+cornstarch,Cornstarch,Seasonings,🌽,9,USDA FDC cornstarch
+sesame_seeds,Sesame seeds,Seasonings,⚪,11,USDA FDC sesame seeds
+sesame_oil,Sesame oil,Oils,🫗,0,USDA FDC sesame oil
+vegetable_oil,Vegetable oil,Oils,🫗,0,USDA FDC vegetable oil
+coconut_milk,Coconut milk (canned),Pantry,🥥,13,USDA FDC canned coconut milk
+broth_regular,Chicken broth,Pantry,🍲,343,USDA FDC chicken broth; regular
+broth_low,Low-sodium chicken broth,Pantry,🍲,72,USDA FDC low-sodium chicken broth
+jasmine_rice,Jasmine rice (uncooked),Grains,🍚,5,USDA FDC white rice raw
+cooked_rice,Cooked rice,Grains,🍚,1,USDA FDC cooked white rice unsalted
+glutinous_rice,Glutinous rice,Grains,🍙,7,USDA FDC glutinous rice raw
+rice_noodles,Rice noodles (dry),Grains,🍜,182,USDA FDC rice noodles dry
+soba,Soba noodles (dry),Grains,🍜,792,USDA FDC soba dry; salt is added during manufacture
+red_lentils,Red lentils,Legumes,🫘,6,USDA FDC lentils raw
+chickpeas,Chickpeas (dried),Legumes,🫘,24,USDA FDC chickpeas raw; canned regular is far higher
+tofu,Firm tofu,Protein,⬜,12,USDA FDC firm tofu
+edamame,Edamame,Legumes,🫛,6,USDA FDC frozen edamame
+egg,Eggs,Protein,🥚,142,USDA FDC whole egg
+chicken_breast,Chicken breast,Protein,🍗,45,USDA FDC chicken breast raw
+chicken_thigh,Chicken thighs,Protein,🍗,90,USDA FDC chicken thigh raw
+pork,Ground pork,Protein,🥩,50,USDA FDC ground pork raw
+beef,Beef sirloin,Protein,🥩,56,USDA FDC beef sirloin raw
+salmon,Salmon,Protein,🐟,44,USDA FDC Atlantic salmon raw
+white_fish,White fish (cod),Protein,🐟,54,USDA FDC cod raw
+shrimp,Shrimp,Protein,🦐,119,USDA FDC shrimp raw; brined frozen shrimp can be much higher
+kimchi,Kimchi,Produce,🥬,498,USDA FDC kimchi; varies by brand
+garlic,Garlic,Produce,🧄,17,USDA FDC garlic
+ginger,Ginger,Produce,🫚,13,USDA FDC ginger root
+scallion,Scallions,Produce,🌱,16,USDA FDC scallions
+onion,Onion,Produce,🧅,4,USDA FDC onion
+lemongrass,Lemongrass,Produce,🌿,6,USDA FDC lemongrass
+cilantro,Cilantro,Produce,🌿,46,USDA FDC coriander leaves
+basil,Thai basil,Produce,🌿,4,USDA FDC basil
+chili_fresh,Fresh chili,Produce,🌶️,9,USDA FDC hot chili peppers
+lime,Lime,Produce,🍋,2,USDA FDC lime juice
+bok_choy,Bok choy,Produce,🥬,65,USDA FDC bok choy
+spinach,Spinach,Produce,🥬,79,USDA FDC spinach
+broccoli,Broccoli,Produce,🥦,33,USDA FDC broccoli
+carrot,Carrot,Produce,🥕,69,USDA FDC carrot
+bell_pepper,Bell pepper,Produce,🫑,4,USDA FDC red bell pepper
+snow_peas,Snow peas,Produce,🫛,4,USDA FDC snow peas
+bean_sprouts,Bean sprouts,Produce,🌱,6,USDA FDC mung bean sprouts
+cucumber,Cucumber,Produce,🥒,2,USDA FDC cucumber
+tomato,Tomato,Produce,🍅,5,USDA FDC tomato
+mango,Mango,Produce,🥭,1,USDA FDC mango
+peanuts,Peanuts (unsalted),Pantry,🥜,18,USDA FDC dry-roasted peanuts unsalted
+wakame,Wakame (rehydrated),Pantry,🌊,872,USDA FDC wakame raw
+nori,Nori,Pantry,🌊,48,USDA FDC laver

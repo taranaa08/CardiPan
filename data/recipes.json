@@ -1,0 +1,638 @@
+[
+  {
+    "id": "steamed_fish",
+    "name": "Ginger-Scallion Steamed Fish",
+    "cuisine": "Cantonese",
+    "emoji": "🐟",
+    "servings": 2,
+    "minutes": 20,
+    "blurb": "Flaky fish, sizzling aromatic oil, a single spoon of soy.",
+    "ingredients": [
+      ["white_fish", 400, "400 g cod fillet"],
+      ["ginger", 20, "thumb of ginger, julienned"],
+      ["scallion", 30, "3 scallions, shredded"],
+      ["soy_sauce_low", 15, "1 tbsp low-sodium soy sauce"],
+      ["vegetable_oil", 15, "1 tbsp oil"],
+      ["sesame_oil", 5, "1 tsp sesame oil"],
+      ["cilantro", 5, "small handful cilantro"]
+    ],
+    "steps": [
+      "Lay fish on a plate over half the ginger and steam 8-10 min until just flaky.",
+      "Pour off the steaming liquid, top with scallion, remaining ginger and cilantro.",
+      "Heat oils until shimmering, pour over the aromatics, then drizzle the soy around the fish."
+    ]
+  },
+  {
+    "id": "chicken_congee",
+    "name": "Chicken & Ginger Congee",
+    "cuisine": "Chinese",
+    "emoji": "🥣",
+    "servings": 4,
+    "minutes": 60,
+    "blurb": "Silky rice porridge; flavour comes from ginger, not salt.",
+    "ingredients": [
+      ["jasmine_rice", 150, "3/4 cup jasmine rice"],
+      ["chicken_breast", 250, "1 chicken breast"],
+      ["ginger", 20, "thumb of ginger, sliced"],
+      ["scallion", 20, "2 scallions"],
+      ["broth_low", 1000, "4 cups low-sodium broth"],
+      ["white_pepper", 1, "pinch white pepper"],
+      ["sesame_oil", 5, "1 tsp sesame oil"]
+    ],
+    "steps": [
+      "Simmer rice, broth, 4 cups water and ginger, stirring often, for 45 min.",
+      "Add chicken for the last 15 min, then shred it back into the pot.",
+      "Finish with scallion, white pepper and a few drops of sesame oil."
+    ]
+  },
+  {
+    "id": "garlic_bok_choy",
+    "name": "Garlic Bok Choy",
+    "cuisine": "Chinese",
+    "emoji": "🥬",
+    "servings": 2,
+    "minutes": 10,
+    "blurb": "Five-minute greens with plenty of garlic.",
+    "ingredients": [
+      ["bok_choy", 400, "4 heads baby bok choy"],
+      ["garlic", 10, "3 cloves garlic, sliced"],
+      ["vegetable_oil", 15, "1 tbsp oil"],
+      ["soy_sauce_low", 5, "1 tsp low-sodium soy sauce"],
+      ["sugar", 2, "pinch sugar"]
+    ],
+    "steps": [
+      "Halve the bok choy and rinse well.",
+      "Fry garlic in oil for 30 s, add bok choy and 2 tbsp water, cover 2 min.",
+      "Uncover, toss with soy and sugar, and serve right away."
+    ]
+  },
+  {
+    "id": "tomato_egg",
+    "name": "Tomato & Egg Stir-Fry",
+    "cuisine": "Chinese",
+    "emoji": "🍅",
+    "servings": 2,
+    "minutes": 15,
+    "blurb": "The home-cooking classic. Tomatoes do the seasoning.",
+    "ingredients": [
+      ["egg", 200, "4 eggs"],
+      ["tomato", 300, "3 ripe tomatoes, wedged"],
+      ["scallion", 15, "1 scallion"],
+      ["sugar", 8, "2 tsp sugar"],
+      ["vegetable_oil", 20, "1.5 tbsp oil"],
+      ["salt", 1, "small pinch salt"]
+    ],
+    "steps": [
+      "Softly scramble eggs in half the oil; set aside.",
+      "Cook tomatoes in the remaining oil until saucy, about 4 min.",
+      "Add sugar and salt, fold the eggs back in, top with scallion."
+    ]
+  },
+  {
+    "id": "masoor_dal",
+    "name": "Masoor Dal",
+    "cuisine": "Indian",
+    "emoji": "🫘",
+    "servings": 4,
+    "minutes": 30,
+    "blurb": "Red lentils with a sizzling cumin tempering.",
+    "ingredients": [
+      ["red_lentils", 200, "1 cup red lentils"],
+      ["onion", 150, "1 onion, diced"],
+      ["tomato", 200, "2 tomatoes, chopped"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["ginger", 10, "1 tsp grated ginger"],
+      ["turmeric", 3, "1 tsp turmeric"],
+      ["cumin", 4, "1 tsp cumin"],
+      ["vegetable_oil", 20, "1.5 tbsp oil"],
+      ["salt", 2, "1/3 tsp salt"],
+      ["cilantro", 10, "handful cilantro"]
+    ],
+    "steps": [
+      "Simmer lentils with turmeric and 3 cups water for 20 min until soft.",
+      "Meanwhile fry cumin, then onion, garlic, ginger and tomato in oil.",
+      "Stir the tempering into the dal, season, and finish with cilantro."
+    ]
+  },
+  {
+    "id": "chana_masala",
+    "name": "Chana Masala",
+    "cuisine": "Indian",
+    "emoji": "🍛",
+    "servings": 4,
+    "minutes": 50,
+    "blurb": "Cooking chickpeas from dry skips the salt in canned ones.",
+    "ingredients": [
+      ["chickpeas", 250, "1 1/4 cups dried chickpeas, soaked"],
+      ["onion", 200, "2 onions"],
+      ["tomato", 300, "3 tomatoes"],
+      ["garlic", 15, "4 cloves garlic"],
+      ["ginger", 15, "1 tbsp ginger"],
+      ["cumin", 5, "1 tsp cumin"],
+      ["coriander_ground", 5, "2 tsp ground coriander"],
+      ["turmeric", 3, "1 tsp turmeric"],
+      ["chili_flakes", 2, "1/2 tsp chili"],
+      ["vegetable_oil", 30, "2 tbsp oil"],
+      ["salt", 3, "1/2 tsp salt"]
+    ],
+    "steps": [
+      "Pressure-cook soaked chickpeas 25 min (or simmer 1 hr).",
+      "Brown onions in oil, add garlic, ginger and spices, then tomatoes.",
+      "Add chickpeas with some cooking liquid and simmer 15 min."
+    ]
+  },
+  {
+    "id": "egg_drop_soup",
+    "name": "Egg Drop Soup",
+    "cuisine": "Chinese",
+    "emoji": "🍜",
+    "servings": 4,
+    "minutes": 15,
+    "blurb": "Low-sodium broth makes a light, satisfying soup.",
+    "ingredients": [
+      ["broth_low", 1000, "4 cups low-sodium broth"],
+      ["egg", 100, "2 eggs, beaten"],
+      ["cornstarch", 15, "1 tbsp cornstarch"],
+      ["scallion", 15, "1 scallion"],
+      ["white_pepper", 1, "pinch white pepper"],
+      ["sesame_oil", 3, "few drops sesame oil"],
+      ["salt", 1, "pinch salt"]
+    ],
+    "steps": [
+      "Bring broth to a simmer; stir in cornstarch slurry to thicken.",
+      "Stir the pot in one direction and slowly pour in the eggs.",
+      "Season with pepper and salt, finish with scallion and sesame oil."
+    ]
+  },
+  {
+    "id": "smashed_cucumber",
+    "name": "Smashed Cucumber Salad",
+    "cuisine": "Sichuan",
+    "emoji": "🥒",
+    "servings": 2,
+    "minutes": 10,
+    "blurb": "Garlicky, tangy and crunchy. Vinegar keeps it bright.",
+    "ingredients": [
+      ["cucumber", 400, "2 cucumbers"],
+      ["garlic", 10, "3 cloves garlic, minced"],
+      ["rice_vinegar", 20, "1.5 tbsp rice vinegar"],
+      ["soy_sauce_low", 8, "1/2 tbsp low-sodium soy"],
+      ["sesame_oil", 8, "2 tsp sesame oil"],
+      ["sugar", 4, "1 tsp sugar"],
+      ["chili_flakes", 2, "pinch chili flakes"],
+      ["salt", 1, "pinch salt"]
+    ],
+    "steps": [
+      "Smash cucumbers with a cleaver and cut into bite-size pieces.",
+      "Toss with salt for 10 min, then drain the liquid.",
+      "Toss with everything else and serve cold."
+    ]
+  },
+  {
+    "id": "tofu_veg_stirfry",
+    "name": "Rainbow Tofu Stir-Fry",
+    "cuisine": "Chinese",
+    "emoji": "🥦",
+    "servings": 3,
+    "minutes": 25,
+    "blurb": "Crispy tofu and five vegetables in a ginger glaze.",
+    "ingredients": [
+      ["tofu", 400, "1 block firm tofu"],
+      ["broccoli", 200, "1 head broccoli"],
+      ["bell_pepper", 150, "1 bell pepper"],
+      ["snow_peas", 100, "handful snow peas"],
+      ["carrot", 100, "1 carrot"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["ginger", 10, "1 tbsp ginger"],
+      ["soy_sauce_low", 24, "1.5 tbsp low-sodium soy"],
+      ["cornstarch", 8, "2 tsp cornstarch"],
+      ["sesame_oil", 5, "1 tsp sesame oil"],
+      ["vegetable_oil", 20, "1.5 tbsp oil"]
+    ],
+    "steps": [
+      "Press and cube tofu, toss in cornstarch, and pan-fry until golden.",
+      "Stir-fry vegetables with garlic and ginger until crisp-tender.",
+      "Return tofu, add soy and a splash of water, toss to glaze."
+    ]
+  },
+  {
+    "id": "mango_sticky_rice",
+    "name": "Mango Sticky Rice",
+    "cuisine": "Thai",
+    "emoji": "🥭",
+    "servings": 4,
+    "minutes": 40,
+    "blurb": "Dessert that fits the budget.",
+    "ingredients": [
+      ["glutinous_rice", 200, "1 cup glutinous rice, soaked"],
+      ["coconut_milk", 200, "3/4 cup coconut milk"],
+      ["sugar", 50, "1/4 cup sugar"],
+      ["salt", 1, "pinch salt"],
+      ["mango", 300, "2 ripe mangoes"]
+    ],
+    "steps": [
+      "Steam soaked rice for 25 min.",
+      "Warm coconut milk with sugar and salt; fold most into the hot rice.",
+      "Rest 15 min, then serve with sliced mango and the remaining sauce."
+    ]
+  },
+  {
+    "id": "sesame_spinach",
+    "name": "Sesame Spinach (Sigeumchi Namul)",
+    "cuisine": "Korean",
+    "emoji": "🥬",
+    "servings": 3,
+    "minutes": 10,
+    "blurb": "A banchan side that's mostly sesame and garlic.",
+    "ingredients": [
+      ["spinach", 400, "1 large bunch spinach"],
+      ["garlic", 5, "1 clove garlic, grated"],
+      ["sesame_oil", 10, "2 tsp sesame oil"],
+      ["sesame_seeds", 5, "1 tsp toasted sesame"],
+      ["soy_sauce_low", 5, "1 tsp low-sodium soy"]
+    ],
+    "steps": [
+      "Blanch spinach 30 s, shock in cold water, and squeeze dry.",
+      "Toss with garlic, sesame oil and soy.",
+      "Top with sesame seeds."
+    ]
+  },
+  {
+    "id": "chili_edamame",
+    "name": "Chili-Garlic Edamame",
+    "cuisine": "Japanese",
+    "emoji": "🫛",
+    "servings": 3,
+    "minutes": 8,
+    "blurb": "A snack that's big on flavour and low on salt.",
+    "ingredients": [
+      ["edamame", 300, "2 cups edamame in pods"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["chili_flakes", 2, "pinch chili"],
+      ["sesame_oil", 8, "2 tsp sesame oil"],
+      ["salt", 1, "tiny pinch flaky salt"]
+    ],
+    "steps": [
+      "Boil edamame 4 min and drain.",
+      "Sizzle garlic and chili in sesame oil for 30 s.",
+      "Toss edamame in the oil and finish with a tiny pinch of salt."
+    ]
+  },
+  {
+    "id": "steamed_egg",
+    "name": "Steamed Egg Custard",
+    "cuisine": "Korean",
+    "emoji": "🥚",
+    "servings": 2,
+    "minutes": 15,
+    "blurb": "Gyeran-jjim: puffy, savoury and very gentle.",
+    "ingredients": [
+      ["egg", 150, "3 eggs"],
+      ["broth_low", 200, "3/4 cup low-sodium broth"],
+      ["scallion", 5, "1/2 scallion"],
+      ["sesame_oil", 2, "few drops sesame oil"],
+      ["salt", 0.5, "tiny pinch salt"]
+    ],
+    "steps": [
+      "Whisk eggs with broth and salt, then strain for silkiness.",
+      "Steam covered on low for 10-12 min until just set.",
+      "Top with scallion and sesame oil."
+    ]
+  },
+  {
+    "id": "soy_ginger_bowl",
+    "name": "Soy-Ginger Chicken Rice Bowl",
+    "cuisine": "Japanese",
+    "emoji": "🍱",
+    "servings": 2,
+    "minutes": 25,
+    "blurb": "Weeknight rice bowl. Switching to low-sodium soy saves more than a third of its sodium.",
+    "ingredients": [
+      ["chicken_breast", 300, "2 small chicken breasts"],
+      ["soy_sauce", 16, "1 tbsp soy sauce"],
+      ["ginger", 10, "1 tbsp grated ginger"],
+      ["garlic", 5, "1 clove garlic"],
+      ["honey", 10, "2 tsp honey"],
+      ["cooked_rice", 300, "2 cups cooked rice"],
+      ["broccoli", 200, "1 head broccoli"],
+      ["sesame_oil", 5, "1 tsp sesame oil"]
+    ],
+    "steps": [
+      "Marinate sliced chicken in soy, ginger, garlic and honey for 10 min.",
+      "Sear the chicken until cooked through; steam the broccoli.",
+      "Serve over rice with a drizzle of sesame oil."
+    ]
+  },
+  {
+    "id": "lemongrass_chicken",
+    "name": "Lemongrass Chicken",
+    "cuisine": "Vietnamese",
+    "emoji": "🌿",
+    "servings": 4,
+    "minutes": 30,
+    "blurb": "Bright and fragrant. Half the fish sauce plus extra lime works.",
+    "ingredients": [
+      ["chicken_thigh", 500, "500 g chicken thighs"],
+      ["lemongrass", 30, "2 stalks lemongrass, minced"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["onion", 50, "1 shallot"],
+      ["fish_sauce", 18, "1 tbsp fish sauce"],
+      ["sugar", 10, "2 tsp sugar"],
+      ["lime", 15, "1 lime"],
+      ["vegetable_oil", 15, "1 tbsp oil"]
+    ],
+    "steps": [
+      "Marinate chicken in lemongrass, garlic, shallot, fish sauce and sugar.",
+      "Sear in a hot pan until caramelised and cooked through.",
+      "Squeeze lime over just before serving."
+    ]
+  },
+  {
+    "id": "coconut_curry",
+    "name": "Thai Coconut Chicken Curry",
+    "cuisine": "Thai",
+    "emoji": "🥥",
+    "servings": 4,
+    "minutes": 35,
+    "blurb": "Creamy curry built on aromatics instead of salty paste.",
+    "ingredients": [
+      ["chicken_breast", 500, "500 g chicken breast"],
+      ["coconut_milk", 400, "1 can coconut milk"],
+      ["onion", 100, "1 onion"],
+      ["bell_pepper", 150, "1 bell pepper"],
+      ["curry_powder", 10, "1 tbsp curry powder"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["ginger", 10, "1 tbsp ginger"],
+      ["fish_sauce", 18, "1 tbsp fish sauce"],
+      ["lime", 15, "1 lime"],
+      ["basil", 10, "handful Thai basil"],
+      ["sugar", 5, "1 tsp sugar"]
+    ],
+    "steps": [
+      "Fry onion, garlic, ginger and curry powder until fragrant.",
+      "Add coconut milk and chicken; simmer 15 min, then add peppers.",
+      "Season with fish sauce, lime and sugar; finish with basil."
+    ]
+  },
+  {
+    "id": "salmon_teriyaki",
+    "name": "Salmon Teriyaki",
+    "cuisine": "Japanese",
+    "emoji": "🍣",
+    "servings": 2,
+    "minutes": 20,
+    "blurb": "Glossy glaze. Most of the sodium comes from the soy.",
+    "ingredients": [
+      ["salmon", 300, "2 salmon fillets"],
+      ["soy_sauce", 24, "1.5 tbsp soy sauce"],
+      ["honey", 15, "1 tbsp honey"],
+      ["ginger", 5, "1 tsp ginger"],
+      ["garlic", 5, "1 clove garlic"],
+      ["rice_vinegar", 15, "1 tbsp rice vinegar"],
+      ["sesame_seeds", 5, "1 tsp sesame seeds"]
+    ],
+    "steps": [
+      "Simmer soy, honey, ginger, garlic and vinegar into a glaze.",
+      "Pan-sear salmon skin-side down 5 min, flip for 2.",
+      "Spoon the glaze over and top with sesame."
+    ]
+  },
+  {
+    "id": "miso_soup",
+    "name": "Miso Soup with Tofu",
+    "cuisine": "Japanese",
+    "emoji": "🥣",
+    "servings": 4,
+    "minutes": 10,
+    "blurb": "It looks light, but one bowl is about a third of a 1,500 mg day.",
+    "ingredients": [
+      ["miso", 60, "3.5 tbsp miso"],
+      ["tofu", 200, "half a block silken tofu"],
+      ["wakame", 10, "small handful wakame"],
+      ["scallion", 20, "2 scallions"]
+    ],
+    "steps": [
+      "Heat 4 cups water (or dashi) to just below a simmer.",
+      "Whisk in miso off the heat; never boil it.",
+      "Add tofu, wakame and scallion."
+    ]
+  },
+  {
+    "id": "chicken_adobo",
+    "name": "Chicken Adobo",
+    "cuisine": "Filipino",
+    "emoji": "🍗",
+    "servings": 4,
+    "minutes": 45,
+    "blurb": "The Filipino classic: vinegar, garlic, and a lot of soy.",
+    "ingredients": [
+      ["chicken_thigh", 800, "8 chicken thighs"],
+      ["soy_sauce", 64, "1/4 cup soy sauce"],
+      ["white_vinegar", 120, "1/2 cup vinegar"],
+      ["garlic", 30, "1 head garlic, smashed"],
+      ["black_pepper", 3, "1 tsp peppercorns"],
+      ["sugar", 5, "1 tsp sugar"]
+    ],
+    "steps": [
+      "Marinate chicken in soy, vinegar, garlic and pepper for 30 min.",
+      "Simmer covered 30 min, then uncovered to reduce.",
+      "Sear the chicken in its own fat and glaze with the sauce."
+    ]
+  },
+  {
+    "id": "kimchi_fried_rice",
+    "name": "Kimchi Fried Rice",
+    "cuisine": "Korean",
+    "emoji": "🍳",
+    "servings": 2,
+    "minutes": 15,
+    "blurb": "Kimchi, gochujang and soy all add sodium to one pan.",
+    "ingredients": [
+      ["cooked_rice", 400, "2.5 cups day-old rice"],
+      ["kimchi", 150, "1 cup kimchi, chopped"],
+      ["egg", 100, "2 eggs"],
+      ["gochujang", 15, "1 tbsp gochujang"],
+      ["soy_sauce", 8, "1/2 tbsp soy sauce"],
+      ["sesame_oil", 5, "1 tsp sesame oil"],
+      ["scallion", 15, "1 scallion"],
+      ["vegetable_oil", 15, "1 tbsp oil"]
+    ],
+    "steps": [
+      "Fry kimchi in oil for 3 min, then add gochujang.",
+      "Add rice and soy; stir-fry until crisp in spots.",
+      "Top with fried eggs, scallion and sesame oil."
+    ]
+  },
+  {
+    "id": "kimchi_jjigae",
+    "name": "Kimchi Jjigae",
+    "cuisine": "Korean",
+    "emoji": "🍲",
+    "servings": 3,
+    "minutes": 30,
+    "blurb": "Warming stew with a very high sodium count.",
+    "ingredients": [
+      ["kimchi", 300, "2 cups aged kimchi"],
+      ["pork", 200, "200 g pork"],
+      ["tofu", 300, "1 block tofu"],
+      ["gochujang", 15, "1 tbsp gochujang"],
+      ["chili_flakes", 5, "1 tbsp gochugaru"],
+      ["onion", 100, "1 onion"],
+      ["scallion", 20, "2 scallions"],
+      ["soy_sauce", 8, "1/2 tbsp soy sauce"]
+    ],
+    "steps": [
+      "Brown pork, then add kimchi and fry 5 min.",
+      "Add 3 cups water, gochujang, gochugaru, onion and soy; simmer 15 min.",
+      "Add tofu and scallion and simmer 5 more min."
+    ]
+  },
+  {
+    "id": "beef_broccoli",
+    "name": "Takeout-Style Beef & Broccoli",
+    "cuisine": "Chinese-American",
+    "emoji": "🥡",
+    "servings": 3,
+    "minutes": 25,
+    "blurb": "The takeout favourite, full of oyster sauce and soy.",
+    "ingredients": [
+      ["beef", 400, "400 g flank or sirloin"],
+      ["broccoli", 400, "2 heads broccoli"],
+      ["oyster_sauce", 32, "2 tbsp oyster sauce"],
+      ["soy_sauce", 32, "2 tbsp soy sauce"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["ginger", 10, "1 tbsp ginger"],
+      ["cornstarch", 10, "1 tbsp cornstarch"],
+      ["sugar", 10, "2 tsp sugar"],
+      ["vegetable_oil", 30, "2 tbsp oil"]
+    ],
+    "steps": [
+      "Velvet sliced beef in cornstarch and half the soy.",
+      "Sear beef in batches; blanch broccoli.",
+      "Toss with a sauce of oyster sauce, soy, sugar, garlic and ginger."
+    ]
+  },
+  {
+    "id": "pad_kra_pao",
+    "name": "Thai Basil Chicken (Pad Kra Pao)",
+    "cuisine": "Thai",
+    "emoji": "🌶️",
+    "servings": 2,
+    "minutes": 15,
+    "blurb": "Street-food favourite with three salty sauces.",
+    "ingredients": [
+      ["chicken_breast", 300, "300 g chicken, minced"],
+      ["garlic", 15, "5 cloves garlic"],
+      ["chili_fresh", 5, "2 bird's eye chilies"],
+      ["oyster_sauce", 16, "1 tbsp oyster sauce"],
+      ["soy_sauce", 16, "1 tbsp soy sauce"],
+      ["fish_sauce", 9, "1/2 tbsp fish sauce"],
+      ["sugar", 5, "1 tsp sugar"],
+      ["basil", 20, "big handful holy basil"],
+      ["vegetable_oil", 15, "1 tbsp oil"]
+    ],
+    "steps": [
+      "Pound garlic and chili; fry in oil until fragrant.",
+      "Add chicken and cook through.",
+      "Add sauces and sugar, then toss in basil until wilted."
+    ]
+  },
+  {
+    "id": "mapo_tofu",
+    "name": "Mapo Tofu",
+    "cuisine": "Sichuan",
+    "emoji": "🔥",
+    "servings": 3,
+    "minutes": 25,
+    "blurb": "Numbing and spicy. Doubanjiang is one of the saltiest condiments.",
+    "ingredients": [
+      ["tofu", 400, "1 block soft tofu"],
+      ["pork", 150, "150 g ground pork"],
+      ["doubanjiang", 30, "2 tbsp doubanjiang"],
+      ["soy_sauce", 8, "1/2 tbsp soy sauce"],
+      ["garlic", 10, "3 cloves garlic"],
+      ["ginger", 10, "1 tbsp ginger"],
+      ["scallion", 15, "1 scallion"],
+      ["cornstarch", 10, "1 tbsp cornstarch"],
+      ["broth_regular", 200, "3/4 cup chicken broth"],
+      ["vegetable_oil", 30, "2 tbsp oil"]
+    ],
+    "steps": [
+      "Brown pork, then fry doubanjiang, garlic and ginger in the oil.",
+      "Add broth, soy and tofu cubes; simmer gently 5 min.",
+      "Thicken with cornstarch slurry and top with scallion."
+    ]
+  },
+  {
+    "id": "pad_thai",
+    "name": "Pad Thai",
+    "cuisine": "Thai",
+    "emoji": "🍤",
+    "servings": 2,
+    "minutes": 30,
+    "blurb": "A restaurant portion can exceed a full day's sodium limit.",
+    "ingredients": [
+      ["rice_noodles", 200, "200 g rice noodles"],
+      ["shrimp", 150, "150 g shrimp"],
+      ["egg", 100, "2 eggs"],
+      ["bean_sprouts", 100, "big handful bean sprouts"],
+      ["scallion", 20, "2 scallions"],
+      ["peanuts", 30, "handful unsalted peanuts"],
+      ["fish_sauce", 36, "2 tbsp fish sauce"],
+      ["sugar", 20, "1.5 tbsp sugar"],
+      ["lime", 15, "1 lime"],
+      ["vegetable_oil", 20, "1.5 tbsp oil"]
+    ],
+    "steps": [
+      "Soak noodles until pliable.",
+      "Stir-fry shrimp, push aside, and scramble the eggs.",
+      "Add noodles, fish sauce and sugar; toss with sprouts, scallion and peanuts."
+    ]
+  },
+  {
+    "id": "chicken_pho",
+    "name": "Chicken Pho (Phở Gà)",
+    "cuisine": "Vietnamese",
+    "emoji": "🍜",
+    "servings": 2,
+    "minutes": 45,
+    "blurb": "Most of the sodium is in the broth, so leave some in the bowl.",
+    "ingredients": [
+      ["broth_regular", 1000, "4 cups chicken broth"],
+      ["rice_noodles", 150, "150 g flat rice noodles"],
+      ["chicken_breast", 200, "1 chicken breast"],
+      ["fish_sauce", 18, "1 tbsp fish sauce"],
+      ["ginger", 20, "charred ginger"],
+      ["onion", 100, "charred onion"],
+      ["bean_sprouts", 100, "bean sprouts"],
+      ["basil", 10, "Thai basil"],
+      ["lime", 15, "lime wedges"]
+    ],
+    "steps": [
+      "Simmer broth with charred ginger and onion for 30 min; poach chicken in it.",
+      "Season with fish sauce; cook the noodles separately.",
+      "Assemble bowls with noodles, sliced chicken, hot broth and herbs."
+    ]
+  },
+  {
+    "id": "cold_soba",
+    "name": "Cold Soba with Dipping Sauce",
+    "cuisine": "Japanese",
+    "emoji": "🥢",
+    "servings": 2,
+    "minutes": 15,
+    "blurb": "Surprise: the noodles themselves contain added salt.",
+    "ingredients": [
+      ["soba", 200, "200 g dried soba"],
+      ["soy_sauce", 30, "2 tbsp soy sauce"],
+      ["sugar", 10, "2 tsp sugar"],
+      ["scallion", 20, "2 scallions"],
+      ["nori", 2, "1 sheet nori, shredded"]
+    ],
+    "steps": [
+      "Cook soba 4 min, then rinse hard under cold water.",
+      "Mix soy, sugar and 1/2 cup water for the dipping sauce.",
+      "Serve noodles topped with nori and scallion, with the sauce on the side."
+    ]
+  }
+]

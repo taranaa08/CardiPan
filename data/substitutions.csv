@@ -1,0 +1,8 @@
+from_id,to_id,ratio,note
+soy_sauce,soy_sauce_low,1,Swap to low-sodium soy sauce
+fish_sauce,fish_sauce,0.5,Use half the fish sauce and add extra lime
+broth_regular,broth_low,1,Use low-sodium broth
+salt,msg,1,Swap salt for MSG (about 1/3 the sodium)
+oyster_sauce,oyster_sauce,0.5,Use half the oyster sauce
+miso,miso,0.66,Use 2/3 the miso and add more scallion
+gochujang,chili_flakes,0.5,Replace gochujang with gochugaru for the heat
