@@ -1357,3 +1357,91 @@ input[type='search']:focus {
   color: inherit;
   font-weight: 700;
 }
+
+/* ---------- voice (ElevenLabs) ---------- */
+
+.tabs .voice-btn {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.tabs .voice-btn--live {
+  background: var(--over);
+  color: #fff;
+  animation: voice-ring 1.6s ease-out infinite;
+}
+
+@keyframes voice-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--over) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 12px transparent;
+  }
+}
+
+.voice-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+.voice-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--over);
+  animation: voice-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes voice-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* The hero glow breathes while the agent listens and pulses while it speaks. */
+.budget--voice {
+  position: relative;
+  isolation: isolate;
+}
+
+.budget--voice::before {
+  content: '';
+  position: absolute;
+  inset: -20px -40px -10px;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 55% at 50% 55%, var(--glow), transparent 70%);
+  animation: voice-breathe 3s ease-in-out infinite;
+}
+
+.budget--speaking::before {
+  animation-duration: 0.9s;
+}
+
+@keyframes voice-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs .voice-btn--live,
+  .voice-dot,
+  .budget--voice::before {
+    animation: none;
+  }
+}

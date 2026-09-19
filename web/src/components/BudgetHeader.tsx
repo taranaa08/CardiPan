@@ -1,3 +1,4 @@
+import { useConversationMode, useConversationStatus } from '@elevenlabs/react'
 import { AnimatePresence, animate, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { fmt, type Today } from '../api'
@@ -38,6 +39,10 @@ export function BudgetHeader({ today, onEditTarget, onRemoveEntry }: Props) {
   const used = target > 0 ? Math.min(today.consumed_mg / target, 1) : 0
   const level = remaining < 0 ? 'over' : remaining < target * 0.25 ? 'low' : 'ok'
   const count = today.entries.length
+  const { status } = useConversationStatus()
+  const { isSpeaking } = useConversationMode()
+  const voice = status === 'connected' ? (isSpeaking ? 'speaking' : 'listening') : status === 'connecting' ? 'connecting' : null
+  const voiceLabel = { connecting: 'Connecting…', listening: 'Listening', speaking: 'Speaking' }
 
   // The hero scrolls away with the page; a small pinned pill keeps the allowance visible.
   const numberRef = useRef<HTMLParagraphElement>(null)
@@ -54,8 +59,14 @@ export function BudgetHeader({ today, onEditTarget, onRemoveEntry }: Props) {
 
   return (
     <>
-      <header className={`budget budget--${level}`}>
-        <p className="eyebrow">Today's sodium</p>
+      <header className={`budget budget--${level}${voice ? ` budget--voice budget--${voice}` : ''}`}>
+        {voice ? (
+          <p className="eyebrow voice-status" aria-live="polite">
+            <span className="voice-dot" aria-hidden /> {voiceLabel[voice]}
+          </p>
+        ) : (
+          <p className="eyebrow">Today's sodium</p>
+        )}
         <p ref={numberRef} className="budget-remaining" aria-live="polite">
           {fmt(Math.abs(shown))}
           <span className="budget-unit"> mg {remaining < 0 ? 'over' : 'left'}</span>

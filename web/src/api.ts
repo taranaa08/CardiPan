@@ -132,6 +132,8 @@ export const api = {
   recipe: (id: string, day: string) => request<RecipeDetail>(`/recipes/${encodeURIComponent(id)}?day=${day}`),
   removeRecipe: (id: string) => request(`/recipes/${encodeURIComponent(id)}/removed`, 'PUT'),
   restoreRecipe: (id: string) => request(`/recipes/${encodeURIComponent(id)}/removed`, 'DELETE'),
+  voiceStatus: () => request<{ enabled: boolean }>('/voice/status'),
+  voiceSession: () => request<{ signed_url: string }>('/voice/session'),
   undo: (entryId: number) => request(`/log/${entryId}`, 'DELETE'),
   demoReset: (day: string) => request<Today>('/demo/reset', 'POST', { day }),
 }

@@ -7,13 +7,22 @@ Every day-scoped call takes the client's local date (YYYY-MM-DD), so the running
 total "resets at midnight" wherever the patient is, with no job on the server.
 """
 
+import os
 from contextlib import asynccontextmanager
 from datetime import date
+from pathlib import Path
 
+import httpx
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from api import queries as q
+
+# ELEVENLABS_API_KEY / ELEVENLABS_AGENT_ID live in the repo-root .env (never committed).
+load_dotenv(Path(__file__).parent.parent / ".env")
+ELEVENLABS_SIGNED_URL = "https://api.elevenlabs.io/v1/convai/conversation/get-signed-url"
 
 CATEGORY_ORDER = ["Produce", "Protein", "Grains", "Legumes", "Sauces", "Seasonings", "Oils", "Pantry"]
 
@@ -190,6 +199,32 @@ def undo_log(log_id: int, con=Depends(db)):
     return {"deleted": log_id}
 
 
+def voice_config():
+    return os.environ.get("ELEVENLABS_API_KEY"), os.environ.get("ELEVENLABS_AGENT_ID")
+
+
+@api.get("/voice/status")
+def voice_status():
+    """Voice is optional: without ElevenLabs credentials the app hides the Talk button and works as before."""
+    key, agent_id = voice_config()
+    return {"enabled": bool(key and agent_id)}
+
+
+@api.get("/voice/session")
+def voice_session():
+    """A signed URL (valid 15 min) for one voice conversation, so the API key never reaches the browser."""
+    key, agent_id = voice_config()
+    if not (key and agent_id):
+        raise HTTPException(404, "Voice is not configured")
+    try:
+        res = httpx.get(ELEVENLABS_SIGNED_URL, params={"agent_id": agent_id}, headers={"xi-api-key": key}, timeout=10)
+    except httpx.HTTPError as e:
+        raise HTTPException(502, f"Couldn't reach ElevenLabs: {e}") from e
+    if res.status_code != 200:
+        raise HTTPException(502, f"ElevenLabs refused the session ({res.status_code})")
+    return {"signed_url": res.json()["signed_url"]}
+
+
 @api.post("/demo/reset")
 def demo_reset(body: DemoReset, con=Depends(db)):
     """Known starting state for the pitch: target set, starter pantry, empty day."""
@@ -201,3 +236,8 @@ def demo_reset(body: DemoReset, con=Depends(db)):
 
 
 app.include_router(api)
+
+# In the deployed image the built web app sits next to the API and is served from the same origin.
+WEB_DIST = Path(__file__).parent.parent / "web" / "dist"
+if WEB_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=WEB_DIST, html=True), name="web")

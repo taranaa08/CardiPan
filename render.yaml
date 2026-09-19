@@ -1,0 +1,13 @@
+# Render Blueprint: one web service running the API and serving the built web app.
+services:
+  - type: web
+    name: pantry-meal-finder
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/voice/status
+    envVars:
+      # Set these in the Render dashboard (Environment). Without them the app runs without voice.
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_AGENT_ID
+        sync: false

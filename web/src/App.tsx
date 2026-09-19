@@ -1,7 +1,8 @@
 import { AnimatePresence } from 'framer-motion'
 import { useCallback, useEffect, useState } from 'react'
-import { api, localDay, type Catalog, type Recipe, type RecipeDetail as Detail, type Swap, type Today } from './api'
+import { api, localDay, type Catalog, type Recipe, type LogResult, type RecipeDetail as Detail, type Swap, type Today } from './api'
 import { BudgetHeader } from './components/BudgetHeader'
+import { VoiceButton } from './components/VoiceButton'
 import { SelectionSheet, type Picked } from './components/SelectionSheet'
 import { DeckScreen, type Direction } from './screens/DeckScreen'
 import { PantryScreen } from './screens/PantryScreen'
@@ -129,7 +130,7 @@ export default function App() {
   }
 
   // Log one serving (from a swipe or the recipe page) and keep the card out of today's deck.
-  async function pick(recipe: Picked['recipe'], swaps: Swap[]) {
+  async function pick(recipe: Picked['recipe'], swaps: Swap[]): Promise<LogResult | undefined> {
     setHidden((h) => ({ ...h, picked: [...h.picked, recipe.id] }))
     try {
       const res = await api.log(recipe.id, localDay(), swaps.map((s) => s.from_id))
@@ -143,6 +144,7 @@ export default function App() {
         today: res.today,
       })
       refreshDeck()
+      return res
     } catch (e) {
       unpick(recipe.id)
       fail(e)
@@ -210,6 +212,7 @@ export default function App() {
             <button type="button" aria-current={screen === 'pantry'} onClick={() => goTo('pantry')}>
               Pantry <span className="tab-count">{pantry.size}</span>
             </button>
+            <VoiceButton logMeal={(r) => pick(r, r.swaps)} onError={fail} />
           </nav>
         </>
       )}

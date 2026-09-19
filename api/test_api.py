@@ -207,3 +207,38 @@ def test_deleted_recipe_leaves_deck_and_can_be_restored(client):
     client.delete("/api/recipes/tomato_egg/removed")
     assert "tomato_egg" in deck_ids(client)
     assert client.put("/api/recipes/unicorn/removed").status_code == 404
+
+
+class FakeResponse:
+    def __init__(self, status_code, body):
+        self.status_code, self._body = status_code, body
+
+    def json(self):
+        return self._body
+
+
+def test_voice_disabled_without_credentials(client, monkeypatch):
+    monkeypatch.delenv("ELEVENLABS_API_KEY", raising=False)
+    monkeypatch.delenv("ELEVENLABS_AGENT_ID", raising=False)
+    assert client.get("/api/voice/status").json() == {"enabled": False}
+    assert client.get("/api/voice/session").status_code == 404
+
+
+def test_voice_session_returns_signed_url(client, monkeypatch):
+    from api import main
+
+    monkeypatch.setenv("ELEVENLABS_API_KEY", "test-key")
+    monkeypatch.setenv("ELEVENLABS_AGENT_ID", "agent_123")
+    calls = []
+
+    def fake_get(url, params, headers, timeout):
+        calls.append((params, headers))
+        return FakeResponse(200, {"signed_url": "wss://example/convai?sig=abc"})
+
+    monkeypatch.setattr(main.httpx, "get", fake_get)
+    assert client.get("/api/voice/status").json() == {"enabled": True}
+    assert client.get("/api/voice/session").json() == {"signed_url": "wss://example/convai?sig=abc"}
+    assert calls == [({"agent_id": "agent_123"}, {"xi-api-key": "test-key"})]
+
+    monkeypatch.setattr(main.httpx, "get", lambda *a, **k: FakeResponse(401, {}))
+    assert client.get("/api/voice/session").status_code == 502
