@@ -49,7 +49,7 @@ export function SelectionSheet({ picked, onUndo, onClose, onViewRecipe }: Props)
         exit={{ y: '100%' }}
         transition={{ type: 'spring', stiffness: 380, damping: 36 }}
       >
-        <p className="sheet-kicker">Added to today</p>
+        <p className="eyebrow sheet-kicker">Added to today</p>
         <h2 id="sheet-title">
           <span aria-hidden>{recipe.emoji}</span> {recipe.name}
         </h2>

@@ -45,6 +45,8 @@ export function RecipesScreen({ consumedMg, onOpen, onError }: Props) {
 
   return (
     <div className="screen recipes">
+      <p className="eyebrow">Recipes</p>
+      <h1>Every meal, lowest sodium first</h1>
       <input
         type="search"
         className="search"

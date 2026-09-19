@@ -34,6 +34,13 @@ export function TargetScreen({ current, onSave, onCancel }: Props) {
 
   return (
     <form className="screen target" onSubmit={submit}>
+      {current ? (
+        <p className="eyebrow">Your target</p>
+      ) : (
+        <p className="eyebrow eyebrow--step">
+          <span className="step-num">1</span> Your target
+        </p>
+      )}
       <h1>What's your daily sodium limit?</h1>
       <p className="lede">Use the number on your discharge sheet or the one your care team gave you.</p>
 

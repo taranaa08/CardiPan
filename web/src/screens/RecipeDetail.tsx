@@ -43,9 +43,10 @@ export function RecipeDetail({ recipeId, consumedMg, onBack, onAdd, onError }: P
         <span aria-hidden>{recipe.emoji}</span>
       </div>
 
+      <p className="eyebrow">{recipe.cuisine}</p>
       <h1>{recipe.name}</h1>
       <p className="detail-meta">
-        {recipe.cuisine} · {recipe.minutes} min · serves {recipe.servings}
+        {recipe.minutes} min · serves {recipe.servings}
       </p>
       <p className="lede">{recipe.blurb}</p>
 
@@ -61,7 +62,7 @@ export function RecipeDetail({ recipeId, consumedMg, onBack, onAdd, onError }: P
           </span>
         </div>
 
-        <h2>Where the sodium comes from</h2>
+        <h2 className="eyebrow">Where the sodium comes from</h2>
         <ul className="sources">
           {top.map((i) => (
             <li key={i.id}>
@@ -85,7 +86,7 @@ export function RecipeDetail({ recipeId, consumedMg, onBack, onAdd, onError }: P
 
         {recipe.available_swaps.length > 0 && (
           <>
-            <h2>Ways to cut sodium</h2>
+            <h2 className="eyebrow">Ways to cut sodium</h2>
             <ul className="swaps">
               {recipe.available_swaps.map((s) => (
                 <li key={s.from_id}>
@@ -99,11 +100,8 @@ export function RecipeDetail({ recipeId, consumedMg, onBack, onAdd, onError }: P
       </section>
 
       <section>
-        <h2>
-          Ingredients{' '}
-          <span className="detail-count">
-            you have {recipe.have} of {recipe.ingredient_count}
-          </span>
+        <h2 className="eyebrow">
+          Ingredients · you have {recipe.have} of {recipe.ingredient_count}
         </h2>
         <ul className="ingredients">
           {recipe.ingredients.map((i) => (
@@ -117,10 +115,15 @@ export function RecipeDetail({ recipeId, consumedMg, onBack, onAdd, onError }: P
       </section>
 
       <section>
-        <h2>Steps</h2>
-        <ol className="steps">
+        <h2 className="eyebrow">Steps</h2>
+        <ol className="timeline">
           {recipe.steps.map((s, n) => (
-            <li key={n}>{s}</li>
+            <li key={n}>
+              <span className="step-num" aria-hidden>
+                {n + 1}
+              </span>
+              <p>{s}</p>
+            </li>
           ))}
         </ol>
       </section>

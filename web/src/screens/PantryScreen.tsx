@@ -8,9 +8,10 @@ type Props = {
   onAddMany: (ids: string[]) => void
   onClear: () => void
   onDone: () => void
+  step?: number // shown during first-run setup
 }
 
-export function PantryScreen({ catalog, pantry, onToggle, onAddMany, onClear, onDone }: Props) {
+export function PantryScreen({ catalog, pantry, onToggle, onAddMany, onClear, onDone, step }: Props) {
   const [query, setQuery] = useState('')
   const q = query.trim().toLowerCase()
 
@@ -25,6 +26,13 @@ export function PantryScreen({ catalog, pantry, onToggle, onAddMany, onClear, on
 
   return (
     <div className="screen pantry">
+      {step ? (
+        <p className="eyebrow eyebrow--step">
+          <span className="step-num">{step}</span> Your kitchen
+        </p>
+      ) : (
+        <p className="eyebrow">Your kitchen</p>
+      )}
       <h1>What's in your kitchen?</h1>
       <p className="lede">Tap everything you have. We'll only suggest meals you can make.</p>
 

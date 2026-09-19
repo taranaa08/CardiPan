@@ -35,6 +35,7 @@ export default function App() {
   const [picked, setPicked] = useState<Picked | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [recipeId, setRecipeId] = useState<string | null>(null) // recipe detail open over the current tab
+  const [onboarding, setOnboarding] = useState(false) // first run: number the target and pantry steps
 
   const fail = useCallback((e: unknown) => setError(message(e)), [])
 
@@ -58,7 +59,9 @@ export default function App() {
         setCatalog(cat)
         setPantry(new Set(ids))
         setToday(t)
-        setScreen(t.target_mg === null ? 'target' : ids.length === 0 ? 'pantry' : 'deck')
+        const first = t.target_mg === null ? 'target' : ids.length === 0 ? 'pantry' : 'deck'
+        setOnboarding(first !== 'deck')
+        setScreen(first)
       })
       .catch((e) => setError(message(e)))
   }, [])
@@ -96,6 +99,7 @@ export default function App() {
 
   function goTo(next: Screen) {
     setRecipeId(null)
+    if (next === 'deck') setOnboarding(false)
     setScreen(next)
   }
 
@@ -238,7 +242,8 @@ export default function App() {
             onToggle={togglePantry}
             onAddMany={(ids) => replacePantry([...pantry, ...ids])}
             onClear={() => replacePantry([])}
-            onDone={() => setScreen('deck')}
+            onDone={() => goTo('deck')}
+            step={onboarding ? 2 : undefined}
           />
         )}
         {!showTarget && !showDetail && screen === 'deck' && (
