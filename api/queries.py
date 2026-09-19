@@ -17,7 +17,8 @@ STARTER_PANTRY = [
 
 
 def connect():
-    con = sqlite3.connect(DB_PATH)
+    # One connection per request, but FastAPI may open it and use it on different threadpool threads.
+    con = sqlite3.connect(DB_PATH, check_same_thread=False)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA foreign_keys = ON")
     return con
@@ -70,21 +71,58 @@ def today(con, day):
     }
 
 
-def missing_ingredients(con, recipe_id):
+def recipe_swaps(con, recipe_id):
+    """Substitutions that lower this recipe's sodium, biggest saving first."""
     return [
         dict(r)
         for r in con.execute(
             """
-            SELECT i.id, i.name, i.emoji, ri.display
-            FROM recipe_ingredients ri
-            JOIN ingredients i ON i.id = ri.ingredient_id
-            LEFT JOIN pantry p ON p.ingredient_id = ri.ingredient_id
-            WHERE ri.recipe_id = ? AND p.ingredient_id IS NULL
-            ORDER BY i.name
+            SELECT rs.from_id, s.to_id, s.note, rs.mg_saved_per_serving,
+                   f.name AS from_name, t.name AS to_name, t.emoji AS to_emoji
+            FROM recipe_swaps rs
+            JOIN substitutions s ON s.from_id = rs.from_id
+            JOIN ingredients f ON f.id = rs.from_id
+            JOIN ingredients t ON t.id = s.to_id
+            WHERE rs.recipe_id = ?
+            ORDER BY rs.mg_saved_per_serving DESC, rs.from_id
             """,
             (recipe_id,),
         )
     ]
+
+
+def ingredients_needed(con, recipe_id, swaps=()):
+    """The recipe's ingredient list after swaps, one entry per distinct ingredient."""
+    by_from = {s["from_id"]: s for s in swaps}
+    needed = {}
+    for r in con.execute(
+        """
+        SELECT i.id, i.name, i.emoji, ri.display
+        FROM recipe_ingredients ri JOIN ingredients i ON i.id = ri.ingredient_id
+        WHERE ri.recipe_id = ?
+        """,
+        (recipe_id,),
+    ):
+        s = by_from.get(r["id"])
+        if s and s["to_id"] == s["from_id"]:  # same ingredient, smaller amount
+            item = {**dict(r), "display": f"{r['name']}, less than the recipe says (see your swap)"}
+        elif s:
+            item = {
+                "id": s["to_id"],
+                "name": s["to_name"],
+                "emoji": s["to_emoji"],
+                "display": f"{s['to_name']} (instead of {s['from_name'].lower()})",
+            }
+        else:
+            item = dict(r)
+        needed.setdefault(item["id"], item)
+    return list(needed.values())
+
+
+def missing_ingredients(con, recipe_id, swaps=()):
+    have = set(pantry(con))
+    missing = [i for i in ingredients_needed(con, recipe_id, swaps) if i["id"] not in have]
+    return sorted(missing, key=lambda i: i["name"])
 
 
 def deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
@@ -104,16 +142,65 @@ def deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
         """,
         {"remaining": remaining, "max_missing": max_missing},
     ).fetchall()
-    return [{**dict(r), "missing": missing_ingredients(con, r["id"])} for r in rows]
+    return [
+        {**dict(r), "missing": missing_ingredients(con, r["id"]), "swaps": [], "sodium_mg_with_swaps": None}
+        for r in rows
+    ]
 
 
-def log_recipe(con, day, recipe_id):
+def choose_swaps(sodium_mg, swaps, remaining):
+    """Fewest swaps, biggest saving first, that bring a serving under the budget. None if even all of them don't."""
+    chosen = []
+    for s in swaps:
+        if sodium_mg <= remaining:
+            break
+        chosen.append(s)
+        sodium_mg -= s["mg_saved_per_serving"]
+    return (chosen, sodium_mg) if sodium_mg <= remaining else (None, None)
+
+
+def swap_deck(con, remaining, max_missing=DEFAULT_MAX_MISSING):
+    """Recipes over the budget as written that fit once swaps are applied. Ranked like deck()."""
+    pantry_ids = set(pantry(con))
+    out = []
+    for r in con.execute(
+        """
+        SELECT id, name, cuisine, emoji, blurb, servings, minutes,
+               sodium_mg_per_serving, sodium_mg_min_per_serving
+        FROM recipes
+        WHERE sodium_mg_per_serving > ? AND sodium_mg_min_per_serving < sodium_mg_per_serving
+        """,
+        (remaining,),
+    ):
+        swaps, mg = choose_swaps(r["sodium_mg_per_serving"], recipe_swaps(con, r["id"]), remaining)
+        if swaps is None:
+            continue
+        needed = ingredients_needed(con, r["id"], swaps)
+        missing = sorted((i for i in needed if i["id"] not in pantry_ids), key=lambda i: i["name"])
+        if len(missing) > max_missing:
+            continue
+        out.append({
+            **dict(r),
+            "ingredient_count": len(needed),
+            "have": len(needed) - len(missing),
+            "missing": missing,
+            "swaps": swaps,
+            "sodium_mg_with_swaps": mg,
+        })
+    out.sort(key=lambda r: (-r["have"] / r["ingredient_count"], r["sodium_mg_with_swaps"], r["id"]))
+    return out
+
+
+def log_recipe(con, day, recipe_id, swaps=()):
+    """Log one serving. Sodium comes from the precomputed per-serving and per-swap values."""
     r = con.execute("SELECT name, sodium_mg_per_serving FROM recipes WHERE id = ?", (recipe_id,)).fetchone()
+    sodium_mg = r["sodium_mg_per_serving"] - sum(s["mg_saved_per_serving"] for s in swaps)
+    label = r["name"] + (" (with swaps)" if swaps else "")
     cur = con.execute(
         "INSERT INTO daily_log (day, recipe_id, label, sodium_mg) VALUES (?, ?, ?, ?)",
-        (day, recipe_id, r["name"], r["sodium_mg_per_serving"]),
+        (day, recipe_id, label, sodium_mg),
     )
-    return cur.lastrowid
+    return cur.lastrowid, sodium_mg
 
 
 def delete_log(con, log_id):

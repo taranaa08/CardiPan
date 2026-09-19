@@ -1,8 +1,15 @@
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
-import { fmt, type MissingIngredient, type Recipe, type Today } from '../api'
+import { fmt, type MissingIngredient, type Recipe, type Swap, type Today } from '../api'
 
-export type Picked = { recipe: Recipe; entryId: number; missing: MissingIngredient[]; today: Today }
+export type Picked = {
+  recipe: Recipe
+  entryId: number
+  sodiumMg: number
+  swaps: Swap[]
+  missing: MissingIngredient[]
+  today: Today
+}
 
 type Props = {
   picked: Picked
@@ -11,7 +18,7 @@ type Props = {
 }
 
 export function SelectionSheet({ picked, onUndo, onClose }: Props) {
-  const { recipe, missing, today } = picked
+  const { recipe, sodiumMg, swaps, missing, today } = picked
   const remaining = today.remaining_mg ?? 0
 
   useEffect(() => {
@@ -47,12 +54,26 @@ export function SelectionSheet({ picked, onUndo, onClose }: Props) {
         </h2>
         <div className="sheet-math">
           <span>
-            +{fmt(recipe.sodium_mg_per_serving)} mg <small>1 serving</small>
+            +{fmt(sodiumMg)} mg <small>{swaps.length > 0 ? 'with swaps' : '1 serving'}</small>
           </span>
           <span className={remaining < 0 ? 'sheet-left sheet-left--over' : 'sheet-left'}>
             {fmt(Math.abs(remaining))} mg {remaining < 0 ? 'over' : 'left'} today
           </span>
         </div>
+
+        {swaps.length > 0 && (
+          <>
+            <h3>Your swap{swaps.length === 1 ? '' : 's'}</h3>
+            <ul className="swaps">
+              {swaps.map((s) => (
+                <li key={s.from_id}>
+                  <span>{s.note}</span>
+                  <span className="swap-saved">−{fmt(s.mg_saved_per_serving)} mg</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         {missing.length === 0 ? (
           <p className="sheet-ready">You have everything. Nothing to buy.</p>

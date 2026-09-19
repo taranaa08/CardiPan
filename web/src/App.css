@@ -309,14 +309,9 @@ input[type='search'] {
 /* ---------- pantry ---------- */
 
 .pantry-tools {
-  position: sticky;
-  top: 0;
-  z-index: 5;
   display: flex;
   gap: 8px;
-  margin: 16px -16px 0;
-  padding: 10px 16px;
-  background: var(--bg);
+  margin-top: 16px;
 }
 
 .pantry-tools .search {
@@ -756,4 +751,49 @@ input[type='search'] {
   .tile {
     transition: none;
   }
+}
+
+/* ---------- swaps ---------- */
+
+.card-chip--swap {
+  top: auto;
+  bottom: 12px;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.deck-count-swaps {
+  color: var(--accent);
+}
+
+.swaps {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 0.88rem;
+}
+
+.swaps li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+}
+
+.swaps li + li {
+  margin-top: 4px;
+}
+
+.swap-saved {
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.swaps--card {
+  margin-top: 10px;
+  font-size: 0.8rem;
 }

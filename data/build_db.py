@@ -50,6 +50,12 @@ CREATE TABLE substitutions (
     ratio REAL NOT NULL,
     note TEXT NOT NULL
 );
+CREATE TABLE recipe_swaps (                   -- one row per substitution that applies to a recipe
+    recipe_id TEXT NOT NULL REFERENCES recipes(id),
+    from_id TEXT NOT NULL REFERENCES ingredients(id),
+    mg_saved_per_serving INTEGER NOT NULL,
+    PRIMARY KEY (recipe_id, from_id)
+);
 CREATE TABLE pantry (
     ingredient_id TEXT PRIMARY KEY REFERENCES ingredients(id)
 );
@@ -146,6 +152,13 @@ def build(db_path=DB_PATH, quiet=False):
             "INSERT INTO recipe_ingredients VALUES (?,?,?,?)",
             [(r["id"], i, g, d) for i, g, d in r["ingredients"]],
         )
+        for line in r["ingredients"]:
+            if line[0] in subs:
+                saved = round(
+                    (sodium(ingredients, [line]) - sodium(ingredients, [line], subs)) / r["servings"]
+                )
+                if saved > 0:
+                    con.execute("INSERT INTO recipe_swaps VALUES (?,?,?)", (r["id"], line[0], saved))
     con.commit()
     con.close()
 

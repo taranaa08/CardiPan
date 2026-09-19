@@ -122,3 +122,51 @@ def test_demo_reset(client):
     today = client.post("/api/demo/reset", json={"day": DAY}).json()
     assert today["target_mg"] == 1500 and today["consumed_mg"] == 0
     assert client.get("/api/pantry").json()["ingredient_ids"] == sorted(queries.STARTER_PANTRY)
+
+
+BOWL_PANTRY = queries.STARTER_PANTRY + ["chicken_breast", "broccoli"]
+
+
+def swap_cards(client, day=DAY):
+    return {r["id"]: r for r in client.get("/api/deck", params={"day": day}).json()["swap_recipes"]}
+
+
+def test_swap_cards_fit_only_with_swaps(client):
+    setup(client)
+    client.post("/api/log", json={"recipe_id": "chicken_adobo", "day": DAY})
+    body = client.get("/api/deck", params={"day": DAY}).json()
+    remaining = body["today"]["remaining_mg"]
+    assert body["swap_recipes"]
+    fits = {r["id"] for r in body["recipes"]}
+    for r in body["swap_recipes"]:
+        assert r["id"] not in fits
+        assert r["sodium_mg_per_serving"] > remaining >= r["sodium_mg_with_swaps"]
+        assert r["sodium_mg_with_swaps"] == r["sodium_mg_per_serving"] - sum(
+            s["mg_saved_per_serving"] for s in r["swaps"]
+        )
+
+
+def test_swaps_are_minimal(client):
+    # Soy-ginger bowl: 543 mg; swapping to low-sodium soy saves enough on its own to fit 400 mg.
+    setup(client, target=400, pantry=BOWL_PANTRY)
+    card = swap_cards(client)["soy_ginger_bowl"]
+    assert [s["from_id"] for s in card["swaps"]] == ["soy_sauce"]
+    assert "soy_sauce_low" in {m["id"] for m in card["missing"]}  # the starter pantry has regular soy only
+
+
+def test_log_with_swaps_uses_swapped_sodium(client):
+    setup(client, target=400, pantry=BOWL_PANTRY)
+    card = swap_cards(client)["soy_ginger_bowl"]
+    res = client.post(
+        "/api/log", json={"recipe_id": "soy_ginger_bowl", "day": DAY, "swaps": ["soy_sauce"]}
+    ).json()
+    assert res["sodium_mg"] == card["sodium_mg_with_swaps"]
+    assert res["today"]["consumed_mg"] == card["sodium_mg_with_swaps"]
+    assert res["today"]["entries"][0]["label"].endswith("(with swaps)")
+    assert {m["id"] for m in res["missing"]} == {m["id"] for m in card["missing"]}
+
+
+def test_log_rejects_swap_that_does_not_apply(client):
+    setup(client)
+    res = client.post("/api/log", json={"recipe_id": "tomato_egg", "day": DAY, "swaps": ["fish_sauce"]})
+    assert res.status_code == 400

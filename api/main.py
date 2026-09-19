@@ -40,6 +40,7 @@ class PantryIds(BaseModel):
 class LogRequest(BaseModel):
     recipe_id: str
     day: date
+    swaps: list[str] = []  # from_ids of the substitutions the patient is making
 
 
 class DemoReset(BaseModel):
@@ -115,7 +116,11 @@ def get_today(day: date, con=Depends(db)):
 def get_deck(day: date, max_missing: int = Query(q.DEFAULT_MAX_MISSING, ge=0), con=Depends(db)):
     require_target(con)
     t = q.today(con, day.isoformat())
-    return {"today": t, "recipes": q.deck(con, t["remaining_mg"], max_missing)}
+    return {
+        "today": t,
+        "recipes": q.deck(con, t["remaining_mg"], max_missing),
+        "swap_recipes": q.swap_deck(con, t["remaining_mg"], max_missing),
+    }
 
 
 @api.post("/log")
@@ -123,10 +128,17 @@ def log_recipe(body: LogRequest, con=Depends(db)):
     require_target(con)
     if not q.recipe_exists(con, body.recipe_id):
         raise HTTPException(404, f"Unknown recipe: {body.recipe_id}")
-    entry_id = q.log_recipe(con, body.day.isoformat(), body.recipe_id)
+    available = {s["from_id"]: s for s in q.recipe_swaps(con, body.recipe_id)}
+    unknown = [f for f in body.swaps if f not in available]
+    if unknown:
+        raise HTTPException(400, f"No swap for {', '.join(unknown)} in {body.recipe_id}")
+    swaps = [available[f] for f in dict.fromkeys(body.swaps)]
+    entry_id, sodium_mg = q.log_recipe(con, body.day.isoformat(), body.recipe_id, swaps)
     return {
         "entry_id": entry_id,
-        "missing": q.missing_ingredients(con, body.recipe_id),
+        "sodium_mg": sodium_mg,
+        "swaps": swaps,
+        "missing": q.missing_ingredients(con, body.recipe_id, swaps),
         "today": q.today(con, body.day.isoformat()),
     }
 

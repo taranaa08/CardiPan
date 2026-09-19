@@ -16,6 +16,16 @@ export type Catalog = {
 
 export type MissingIngredient = { id: string; name: string; emoji: string; display: string }
 
+export type Swap = {
+  from_id: string
+  to_id: string
+  note: string
+  mg_saved_per_serving: number
+  from_name: string
+  to_name: string
+  to_emoji: string
+}
+
 export type Recipe = {
   id: string
   name: string
@@ -29,7 +39,12 @@ export type Recipe = {
   sodium_mg_min_per_serving: number
   have: number
   missing: MissingIngredient[]
+  swaps: Swap[] // non-empty only for cards that fit the budget once these swaps are made
+  sodium_mg_with_swaps: number | null
 }
+
+/** Sodium per serving as the card will be logged: with its swaps applied, if it has any. */
+export const cardSodium = (r: Recipe) => r.sodium_mg_with_swaps ?? r.sodium_mg_per_serving
 
 export type LogEntry = { id: number; recipe_id: string | null; label: string; sodium_mg: number; logged_at: string }
 
@@ -41,7 +56,13 @@ export type Today = {
   entries: LogEntry[]
 }
 
-export type LogResult = { entry_id: number; missing: MissingIngredient[]; today: Today }
+export type LogResult = {
+  entry_id: number
+  sodium_mg: number
+  swaps: Swap[]
+  missing: MissingIngredient[]
+  today: Today
+}
 
 /** The patient's local date. The server keys the running total on this, so it resets at local midnight. */
 export function localDay(d = new Date()): string {
@@ -76,8 +97,10 @@ export const api = {
   replacePantry: (ingredientIds: string[]) =>
     request<PantryIds>('/pantry', 'PUT', { ingredient_ids: ingredientIds }).then(ids),
   today: (day: string) => request<Today>(`/today?day=${day}`),
-  deck: (day: string) => request<{ today: Today; recipes: Recipe[] }>(`/deck?day=${day}`),
-  log: (recipeId: string, day: string) => request<LogResult>('/log', 'POST', { recipe_id: recipeId, day }),
+  deck: (day: string) =>
+    request<{ today: Today; recipes: Recipe[]; swap_recipes: Recipe[] }>(`/deck?day=${day}`),
+  log: (recipeId: string, day: string, swaps: string[]) =>
+    request<LogResult>('/log', 'POST', { recipe_id: recipeId, day, swaps }),
   undo: (entryId: number) => request(`/log/${entryId}`, 'DELETE'),
   demoReset: (day: string) => request<Today>('/demo/reset', 'POST', { day }),
 }

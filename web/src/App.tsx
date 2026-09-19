@@ -39,7 +39,8 @@ export default function App() {
     const day = localDay()
     try {
       const res = await api.deck(day)
-      setDeck(res.recipes)
+      // Cards that fit as written come first; "fits with a swap" cards follow.
+      setDeck([...res.recipes, ...res.swap_recipes])
       setToday(res.today)
       setHidden((h) => (h.day === day ? h : emptyHidden(day)))
       setError(null)
@@ -111,9 +112,16 @@ export default function App() {
     }
     setHidden((h) => ({ ...h, picked: [...h.picked, recipe.id] }))
     try {
-      const res = await api.log(recipe.id, localDay())
+      const res = await api.log(recipe.id, localDay(), recipe.swaps.map((s) => s.from_id))
       setToday(res.today)
-      setPicked({ recipe, entryId: res.entry_id, missing: res.missing, today: res.today })
+      setPicked({
+        recipe,
+        entryId: res.entry_id,
+        sodiumMg: res.sodium_mg,
+        swaps: res.swaps,
+        missing: res.missing,
+        today: res.today,
+      })
       refreshDeck()
     } catch (e) {
       unpick(recipe.id)
@@ -204,6 +212,7 @@ export default function App() {
           <DeckScreen
             recipes={visible}
             fittingCount={fitting.length}
+            swapCount={fitting.filter((r) => r.swaps.length > 0).length}
             hiddenCount={fitting.length - visible.length}
             remaining={today?.remaining_mg ?? 0}
             loaded={deck !== null}

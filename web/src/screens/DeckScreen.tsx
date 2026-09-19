@@ -1,6 +1,6 @@
 import { AnimatePresence, animate, motion, useMotionValue, useTransform, type PanInfo } from 'framer-motion'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { fmt, type Recipe } from '../api'
+import { cardSodium, fmt, type Recipe } from '../api'
 
 export type Direction = 1 | -1 // 1 = pick (right), -1 = skip (left)
 
@@ -25,7 +25,9 @@ function SwipeCard({ recipe, index, remaining, onDecide }: CardProps) {
   const pickOpacity = useTransform(x, [20, SWIPE_THRESHOLD], [0, 1])
   const skipOpacity = useTransform(x, [-SWIPE_THRESHOLD, -20], [1, 0])
   const isTop = index === 0
-  const share = remaining > 0 ? Math.round((recipe.sodium_mg_per_serving / remaining) * 100) : 100
+  const sodium = cardSodium(recipe)
+  const swapped = recipe.swaps.length > 0
+  const share = remaining > 0 ? Math.round((sodium / remaining) * 100) : 100
   const complete = recipe.missing.length === 0
 
   function handleDragEnd(_: unknown, info: PanInfo) {
@@ -57,6 +59,7 @@ function SwipeCard({ recipe, index, remaining, onDecide }: CardProps) {
         </span>
         <span className="card-chip">{recipe.cuisine}</span>
         <span className="card-chip card-chip--right">{recipe.minutes} min</span>
+        {swapped && <span className="card-chip card-chip--swap">Fits with a swap</span>}
         <motion.span className="stamp stamp--pick" style={{ opacity: pickOpacity }}>
           Pick
         </motion.span>
@@ -69,14 +72,34 @@ function SwipeCard({ recipe, index, remaining, onDecide }: CardProps) {
         <p className="card-blurb">{recipe.blurb}</p>
         <div className="card-sodium">
           <span className="card-mg">
-            {fmt(recipe.sodium_mg_per_serving)} <small>mg</small>
+            {fmt(sodium)} <small>mg</small>
           </span>
           <span className="card-mg-note">
-            sodium per serving
+            {swapped ? (
+              <>
+                per serving with swap{recipe.swaps.length === 1 ? '' : 's'} ·{' '}
+                <s>{fmt(recipe.sodium_mg_per_serving)} mg</s>
+              </>
+            ) : (
+              'sodium per serving'
+            )}
             <br />
             {share}% of what's left today
           </span>
         </div>
+        {swapped && (
+          <ul className="swaps swaps--card">
+            {recipe.swaps.map((s) => (
+              <li key={s.from_id}>
+                <span>
+                  <span aria-hidden>🔁 </span>
+                  {s.note}
+                </span>
+                <span className="swap-saved">−{fmt(s.mg_saved_per_serving)} mg</span>
+              </li>
+            ))}
+          </ul>
+        )}
         <div className="card-pantry">
           <span className="dots" aria-hidden>
             {Array.from({ length: recipe.ingredient_count }, (_, i) => (
@@ -97,6 +120,7 @@ function SwipeCard({ recipe, index, remaining, onDecide }: CardProps) {
 type Props = {
   recipes: Recipe[] // already excludes skipped/picked cards
   fittingCount: number
+  swapCount: number
   hiddenCount: number
   remaining: number
   loaded: boolean
@@ -107,7 +131,8 @@ type Props = {
 }
 
 export function DeckScreen(props: Props) {
-  const { recipes, fittingCount, hiddenCount, remaining, loaded, keyboardEnabled, onDecide } = props
+  const { recipes, fittingCount, swapCount, hiddenCount, remaining, loaded, keyboardEnabled, onDecide } = props
+  const plainCount = fittingCount - swapCount
   const [exitDir, setExitDir] = useState<Direction>(1)
   const top = recipes[0]
 
@@ -139,7 +164,8 @@ export function DeckScreen(props: Props) {
       <p className="deck-count">
         {fittingCount === 0
           ? 'No meals fit right now'
-          : `${fittingCount} meal${fittingCount === 1 ? '' : 's'} fit what's left today`}
+          : `${plainCount} meal${plainCount === 1 ? '' : 's'} fit what's left today`}
+        {swapCount > 0 && <span className="deck-count-swaps"> · {swapCount} more with a swap</span>}
       </p>
 
       <div className="stack">
